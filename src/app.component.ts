@@ -88,11 +88,7 @@ export class AppComponent {
       } else {
         const pinnedNames = new Set(this.pinnedRecipes().map(p => p.recipeName));
         const newRecipes = result.map(r => ({ ...r, isPinned: pinnedNames.has(r.recipeName) }));
-        
         this.recipes.set(newRecipes);
-        this.history.update(current => 
-          [...newRecipes, ...current].slice(0, 30)
-        );
       }
     } catch (e) {
       console.error(e);
@@ -102,7 +98,17 @@ export class AppComponent {
     }
   }
 
+  markAsVisited(recipeToVisit: Recipe) {
+    const alreadyVisited = this.history().some(r => r.recipeName === recipeToVisit.recipeName);
+    if (!alreadyVisited) {
+        this.history.update(current => 
+            [recipeToVisit, ...current].slice(0, 30)
+        );
+    }
+  }
+
   togglePin(recipeToToggle: Recipe) {
+    this.markAsVisited(recipeToToggle);
     const isPinned = this.pinnedRecipes().some(p => p.recipeName === recipeToToggle.recipeName);
 
     if (isPinned) {
@@ -111,17 +117,18 @@ export class AppComponent {
       this.pinnedRecipes.update(p => [{ ...recipeToToggle, isPinned: true }, ...p]);
     }
     
-    const updatePinStatus = (recipe: Recipe) => ({
-      ...recipe,
-      isPinned: this.pinnedRecipes().some(p => p.recipeName === recipe.recipeName)
-    });
+    const updatePinStatus = (recipe: Recipe): Recipe => {
+        const isNowPinned = this.pinnedRecipes().some(p => p.recipeName === recipe.recipeName);
+        return { ...recipe, isPinned: isNowPinned };
+    };
 
     this.recipes.update(recipes => recipes.map(r => r.recipeName === recipeToToggle.recipeName ? updatePinStatus(r) : r));
     this.history.update(history => history.map(r => r.recipeName === recipeToToggle.recipeName ? updatePinStatus(r) : r));
   }
-
-  openVideoModal(url: string): void {
-    this.selectedVideoUrl.set(url);
+  
+  openVideoModal(recipe: Recipe): void {
+    this.selectedVideoUrl.set(recipe.youtubeUrl);
+    this.markAsVisited(recipe);
   }
 
   closeVideoModal(): void {

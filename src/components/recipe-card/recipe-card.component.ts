@@ -15,8 +15,9 @@ export class RecipeCardComponent {
   recipe = input.required<Recipe>();
   translationService = inject(TranslationService);
   
-  play = output<string>();
+  play = output<Recipe>();
   togglePin = output<Recipe>();
+  viewInstructions = output<Recipe>();
 
   isExpanded = signal(false);
 
@@ -25,7 +26,7 @@ export class RecipeCardComponent {
   }
   
   onPlayVideo(): void {
-    this.play.emit(this.recipe().youtubeUrl);
+    this.play.emit(this.recipe());
   }
 
   onTogglePin(): void {
@@ -33,6 +34,9 @@ export class RecipeCardComponent {
   }
 
   toggleInstructions(): void {
+    if (!this.isExpanded()) {
+        this.viewInstructions.emit(this.recipe());
+    }
     this.isExpanded.update(v => !v);
   }
 }

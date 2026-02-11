@@ -1,5 +1,5 @@
 {
-  "name": "Copy of Générateur de Recettes IA",
+  "name": "Générateur de Recettes IA",
   "description": "Une application front-end Angular moderne qui génère des recettes de cuisine à l'aide de l'API Gemini. Elle démontre une architecture robuste avec des composants autonomes, la gestion de l'état avec les signaux, une conception réactive avec Tailwind CSS et une internationalisation (FR/EN) simulée. Conçue pour l'environnement Applet.",
   "requestFramePermissions": []
 }
