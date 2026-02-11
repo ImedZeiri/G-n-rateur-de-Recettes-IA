@@ -8,10 +8,10 @@
     <p class="text-lg text-indigo-200 mt-2 px-4 text-center">{{ t('heroSubtitle') }}</p>
   </div>
 } @else {
-<div class="min-h-screen text-gray-800 dark:text-gray-200 animate-fade-in">
+<div class="min-h-screen text-gray-800 animate-fade-in">
   
   <!-- Hero and Header Section -->
-  <div class="relative bg-gradient-to-br from-indigo-600 to-purple-700 dark:from-indigo-900 dark:to-purple-900 text-white p-4 sm:p-6 lg:p-8 pb-16 sm:pb-20 rounded-b-3xl shadow-lg overflow-hidden">
+  <div class="relative bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-4 sm:p-6 lg:p-8 pb-16 sm:pb-20 rounded-b-3xl shadow-lg overflow-hidden">
     <div class="absolute inset-0 bg-black/20"></div>
     <header class="relative max-w-7xl mx-auto flex justify-between items-center mb-8 z-20">
       <div class="flex items-center space-x-3">
@@ -33,7 +33,7 @@
       <p class="text-lg sm:text-xl text-indigo-200 mb-8">{{ t('heroSubtitle') }}</p>
 
       <!-- Search Form -->
-      <div class="bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl shadow-md p-6">
+      <div class="bg-white/20 backdrop-blur-sm rounded-xl shadow-md p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div class="text-left">
             <label for="ingredients" class="block text-sm font-medium text-white mb-2">{{ t('searchLabel') }}</label>
@@ -44,7 +44,7 @@
               (ngModelChange)="ingredients.set($event)"
               (keyup.enter)="findRecipes()"
               [placeholder]="t('searchPlaceholder')"
-              class="w-full px-4 py-3 bg-white/20 dark:bg-black/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 placeholder-indigo-100 dark:placeholder-gray-300 text-white">
+              class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 placeholder-indigo-100 text-white">
           </div>
           <div class="text-left">
             <label for="cuisine" class="block text-sm font-medium text-white mb-2">{{ t('cuisineLabel') }}</label>
@@ -53,9 +53,9 @@
                 id="cuisine"
                 [ngModel]="selectedCuisine()"
                 (ngModelChange)="selectedCuisine.set($event)"
-                class="w-full pl-4 pr-10 py-3 bg-white/20 dark:bg-black/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 text-white dark:text-white appearance-none">
+                class="w-full pl-4 pr-10 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 text-white appearance-none">
                 @for (cuisine of cuisines(); track cuisine.key) {
-                  <option class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white" [value]="cuisine.key">{{ cuisine.label }}</option>
+                  <option class="bg-gray-100 text-gray-900" [value]="cuisine.key">{{ cuisine.label }}</option>
                 }
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
@@ -99,7 +99,7 @@
 
       @if (recipes().length > 0) {
         <div class="animate-fade-in">
-          <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white font-serif">{{ t('resultsTitle') }}</h2>
+          <h2 class="text-3xl font-bold pt-8 mb-8 text-center text-gray-900 font-serif">{{ t('resultsTitle') }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (recipe of recipes(); track recipe.recipeName) {
               <app-recipe-card 
@@ -112,13 +112,13 @@
           </div>
         </div>
       } @else if (!loading() && !error() && recipes().length === 0) {
-        <div class="text-center py-16 px-6 bg-white dark:bg-gray-800 rounded-lg shadow-md animate-fade-in">
+        <div class="text-center py-16 px-6 bg-white rounded-lg shadow-md animate-fade-in">
            <svg class="mx-auto h-16 w-16 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.362-3.797z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214C14.053 4.257 12.597 3.5 11.002 3.5c-1.424 0-2.777.5-3.834 1.343m5.194 1.071c.456.323.866.697 1.229 1.118m-5.194-1.071a5.285 5.285 0 00-3.433 4.415 5.258 5.258 0 011.134 3.012m3.153-7.536c.33.25.636.53.917.84m-4.07-5.558a8.252 8.252 0 01-.975 5.214z" />
            </svg>
-          <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-white font-serif">{{ t('getStartedTitle') }}</h3>
-          <p class="mt-1 text-gray-500 dark:text-gray-400">{{ t('getStartedBody') }}</p>
+          <h3 class="mt-4 text-xl font-semibold text-gray-900 font-serif">{{ t('getStartedTitle') }}</h3>
+          <p class="mt-1 text-gray-500">{{ t('getStartedBody') }}</p>
         </div>
       }
     </main>

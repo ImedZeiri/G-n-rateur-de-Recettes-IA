@@ -1,80 +1,77 @@
 
 @if (recipe()) {
   @let r = recipe();
-  <div class="relative rounded-2xl shadow-lg overflow-hidden h-full flex flex-col transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1">
+  <div class="group relative rounded-2xl shadow-lg overflow-hidden h-full flex flex-col justify-end transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1 bg-gray-800">
     
-    <!-- Background Image -->
-    <img [src]="r.imageUrl" [alt]="r.recipeName" class="absolute inset-0 w-full h-full object-cover -z-10">
-    <div class="absolute inset-0 w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent -z-10"></div>
-
-    <div class="p-4 sm:p-6 flex-grow flex flex-col justify-end text-white">
-      <!-- Title and Description -->
-      <div class="flex-grow">
-        <h3 class="text-xl sm:text-2xl font-bold font-serif mb-2 drop-shadow-md">{{ r.recipeName }}</h3>
-        <p class="text-sm mb-4 flex-grow drop-shadow-sm text-gray-200">{{ r.description }}</p>
+    <!-- Clickable Background Image & Overlay -->
+    <div (click)="onPlayVideo()" class="absolute inset-0 cursor-pointer">
+      <img [src]="r.imageUrl" [alt]="r.recipeName" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+      <!-- Play Icon on Hover -->
+      <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm-1.25,14.5V7.5l6,3.5-6,3.5Z"/>
+        </svg>
       </div>
+    </div>
 
-      <!-- Content with Glassmorphism Effect -->
-      <div class="relative bg-white/20 dark:bg-black/20 backdrop-blur-md rounded-xl p-4 border border-white/20">
-        <!-- Pin Button -->
-        <button 
-          (click)="onTogglePin()" 
-          [attr.aria-label]="r.isPinned ? t('unpinRecipe') : t('pinRecipe')"
-          class="absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300"
-          [class.bg-amber-400]="r.isPinned"
-          [class.text-white]="r.isPinned"
-          [class.hover:bg-amber-500]="r.isPinned"
-          [class.bg-black/20]="!r.isPinned"
-          [class.text-white]="!r.isPinned"
-          [class.hover:bg-black/40]="!r.isPinned"
-          [class.hover:scale-110]="true">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M16,12V4a1,1,0,0,0-1-1H9A1,1,0,0,0,8,4v8l-2.29,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L10,13.41V20a1,1,0,0,0,2,0V13.41l2.88,2.88a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
-          </svg>
-        </button>
+    <!-- Pin Button -->
+    <button 
+      (click)="onTogglePin()" 
+      [attr.aria-label]="r.isPinned ? t('unpinRecipe') : t('pinRecipe')"
+      class="absolute top-4 right-4 z-10 p-2 rounded-full transition-all duration-300 hover:scale-110"
+      [class.bg-amber-400]="r.isPinned"
+      [class.text-white]="r.isPinned"
+      [class.hover:bg-amber-500]="r.isPinned"
+      [class.bg-black/50]="!r.isPinned"
+      [class.text-white]="!r.isPinned"
+      [class.hover:bg-black/70]="!r.isPinned">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16,12V4a1,1,0,0,0-1-1H9A1,1,0,0,0,8,4v8l-2.29,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L10,13.41V20a1,1,0,0,0,2,0V13.41l2.88,2.88a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
+      </svg>
+    </button>
+    
+    <!-- Content Area at the bottom -->
+    <div class="relative z-0 p-4 text-white">
+      <h3 class="text-xl sm:text-2xl font-bold font-serif mb-2 drop-shadow-md">{{ r.recipeName }}</h3>
+      <p class="text-sm mb-4 drop-shadow-sm text-gray-200">{{ r.description }}</p>
 
-        <!-- Ingredients & Instructions -->
-        <div class="space-y-4 text-gray-800 dark:text-gray-200">
-          <div>
-            <h4 class="font-semibold text-md flex items-center gap-x-2 text-gray-900 dark:text-white mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.22,10.64a1,1,0,0,0,1.41,0,3,3,0,0,1,4.24,0,1,1,0,0,0,1.41-1.41,5,5,0,0,0-7.07,0,1,1,0,0,0,0,1.41Z"/><path d="M11.51,20.49a1,1,0,0,0,1,0,8.49,8.49,0,0,0,6.56-8.2V9a1,1,0,0,0-1-1H5.93a1,1,0,0,0-1,1v3.25A8.49,8.49,0,0,0,11.51,20.49ZM7.93,9h8.14v3.25a7.48,7.48,0,0,1-8.14,7.45A7.48,7.48,0,0,1,7.93,12.25Z"/></svg>
-              <span>{{ t('ingredients') }}</span>
-            </h4>
-            <ul class="list-disc list-inside space-y-1 text-sm pl-2">
-              @for (ingredient of r.ingredients; track $index) {
-                <li>{{ ingredient }}</li>
-              }
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="font-semibold text-md flex items-center gap-x-2 text-gray-900 dark:text-white mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.22,10.64a1,1,0,0,0,1.41,0,3,3,0,0,1,4.24,0,1,1,0,0,0,1.41-1.41,5,5,0,0,0-7.07,0,1,1,0,0,0,0,1.41Z"/><path d="M11.51,20.49a1,1,0,0,0,1,0,8.49,8.49,0,0,0,6.56-8.2V9a1,1,0,0,0-1-1H5.93a1,1,0,0,0-1,1v3.25A8.49,8.49,0,0,0,11.51,20.49ZM7.93,9h8.14v3.25a7.48,7.48,0,0,1-8.14,7.45A7.48,7.48,0,0,1,7.93,12.25Z"/></svg>
+      <!-- Expandable Details with Glassmorphism Effect -->
+      <div class="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 overflow-hidden">
+        <div class="p-4">
+          <h4 class="font-semibold text-md flex items-center gap-x-2 text-white mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.22,10.64a1,1,0,0,0,1.41,0,3,3,0,0,1,4.24,0,1,1,0,0,0,1.41-1.41,5,5,0,0,0-7.07,0,1,1,0,0,0,0,1.41Z"/><path d="M11.51,20.49a1,1,0,0,0,1,0,8.49,8.49,0,0,0,6.56-8.2V9a1,1,0,0,0-1-1H5.93a1,1,0,0,0-1,1v3.25A8.49,8.49,0,0,0,11.51,20.49ZM7.93,9h8.14v3.25a7.48,7.48,0,0,1-8.14,7.45A7.48,7.48,0,0,1,7.93,12.25Z"/></svg>
+            <span>{{ t('ingredients') }}</span>
+          </h4>
+          <ul class="list-disc list-inside space-y-1 text-sm pl-2 text-gray-200">
+            @for (ingredient of r.ingredients; track $index) {
+              <li>{{ ingredient }}</li>
+            }
+          </ul>
+        </div>
+        
+        @if (isExpanded()) {
+          <div class="p-4 border-t border-white/20 animate-fade-in" style="animation-duration: 0.4s;">
+            <h4 class="font-semibold text-md flex items-center gap-x-2 text-white mb-2">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20,9.5a.5.5,0,0,0-.5-.5H14V3.5a.5.5,0,0,0-.5-.5h-3a.5.5,0,0,0-.5.5V9H4.5a.5.5,0,0,0-.5.5v5a.5.5,0,0,0,.5.5H10v5.5a.5.5,0,0,0,.5.5h3a.5.5,0,0,0,.5-.5V15h5.5a.5.5,0,0,0,.5-.5Z"/></svg>
               <span>{{ t('instructions') }}</span>
             </h4>
-            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
-              @for (instruction of (isExpanded() ? r.instructions : r.instructions.slice(0, 2)); track $index) {
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2 text-gray-200">
+              @for (instruction of r.instructions; track $index) {
                 <li>{{ instruction }}</li>
               }
             </ol>
-            @if(r.instructions.length > 2) {
-              <button (click)="toggleInstructions()" class="text-sm font-semibold text-indigo-800 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200 mt-2">
-                {{ isExpanded() ? t('seeLess') : t('seeMore') }}
-              </button>
-            }
           </div>
-        </div>
+        }
+        
+        @if(r.instructions.length > 2) {
+          <div class="bg-black/20 hover:bg-black/40 transition-colors">
+             <button (click)="toggleInstructions()" class="w-full text-center p-2 text-sm font-semibold text-white">
+              {{ isExpanded() ? t('seeLess') : t('seeMore') }}
+            </button>
+          </div>
+        }
       </div>
-    </div>
-     <!-- Action Button -->
-    <div class="p-4 bg-white/30 dark:bg-black/30 backdrop-blur-md mt-auto">
-      <button type="button" (click)="onPlayVideo()"
-        class="w-full flex items-center justify-center gap-x-2 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M10,15V9l5,3Z"></path><path d="M20.45,4.32A5.45,5.45,0,0,0,16.6,2.37C14.76,2,12,2,12,2s-2.76,0-4.6.37A5.45,5.45,0,0,0,3.55,4.32,56.6,56.6,0,0,0,2.37,8.23,62,62,0,0,0,2,12s0,3.77.37,5.68A5.45,5.45,0,0,0,3.55,19.68a5.45,5.45,0,0,0,3.85,1.95C9.24,22,12,22,12,22s2.76,0,4.6-.37a5.45,5.45,0,0,0,3.85-1.95A5.45,5.45,0,0,0,21.63,17.77,56.6,56.6,0,0,0,22,12,62,62,0,0,0,21.63,8.23,56.6,56.6,0,0,0,20.45,4.32Z"></path>
-        </svg>
-        <span>{{ t('youtubeButton') }}</span>
-      </button>
     </div>
   </div>
 }

@@ -13,6 +13,16 @@ export interface Recipe {
   isPinned?: boolean;
 }
 
+// Interface for the raw Gemini response, including search queries.
+interface GeminiRecipeResponse {
+  recipeName: string;
+  description: string;
+  ingredients: string[];
+  instructions: string[];
+  imageSearchQuery: string;
+  youtubeSearchQuery: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class GeminiService {
   private translationService = inject(TranslationService);
@@ -45,9 +55,17 @@ export class GeminiService {
             description: "A single step in the cooking process."
           },
           description: "The step-by-step instructions to prepare the dish."
+        },
+        imageSearchQuery: {
+            type: Type.STRING,
+            description: "A simple, effective English search query for a stock photo website to find a high-quality, appealing image of the finished dish. For example: 'gourmet spaghetti carbonara photo'."
+        },
+        youtubeSearchQuery: {
+            type: Type.STRING,
+            description: "An effective English YouTube search query to find a cooking tutorial video for this recipe. For example: 'how to make classic carbonara'."
         }
       },
-      required: ["recipeName", "description", "ingredients", "instructions"],
+      required: ["recipeName", "description", "ingredients", "instructions", "imageSearchQuery", "youtubeSearchQuery"],
     },
   };
 
@@ -74,7 +92,7 @@ export class GeminiService {
     if (cuisine && cuisine !== 'any') {
       prompt = `Generate 3 diverse and delicious ${cuisine} recipes using the following ingredients: ${ingredients}.`;
     }
-    prompt += ` The entire response, including recipe names, descriptions, ingredients, and instructions, must be in ${targetLanguage}.`;
+    prompt += ` For each recipe, also provide an 'imageSearchQuery' (a simple English query for a stock photo site) and a 'youtubeSearchQuery' (an English query for a video tutorial). The recipe details (name, description, etc.) must be in ${targetLanguage}, but the search queries must be in English.`;
 
 
     try {
@@ -88,18 +106,19 @@ export class GeminiService {
       });
 
       const jsonText = response.text.trim();
-      // The Gemini response is just the array, not the full Recipe object with our extra fields.
-      const baseRecipes = JSON.parse(jsonText) as Omit<Recipe, 'imageUrl' | 'youtubeUrl' | 'isPinned'>[];
+      const baseRecipes = JSON.parse(jsonText) as GeminiRecipeResponse[];
 
       // Augment the recipes with our dynamic fields
       const recipes: Recipe[] = baseRecipes.map(recipe => {
-        const searchQuery = encodeURIComponent(recipe.recipeName + ' recipe');
         return {
-          ...recipe,
-          // Use Unsplash to get a relevant image based on the recipe name.
-          imageUrl: `https://source.unsplash.com/600x400/?${encodeURIComponent(recipe.recipeName + ', food')}`,
-          // Create an embeddable YouTube URL from a search query
-          youtubeUrl: `https://www.youtube.com/embed?listType=search&list=${searchQuery}`
+          recipeName: recipe.recipeName,
+          description: recipe.description,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          // Use the model-generated search query for Unsplash to get a more relevant image.
+          imageUrl: `https://source.unsplash.com/600x400/?${encodeURIComponent(recipe.imageSearchQuery)}`,
+          // Use the model-generated search query for a more relevant YouTube search.
+          youtubeUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(recipe.youtubeSearchQuery)}`
         };
       });
 
