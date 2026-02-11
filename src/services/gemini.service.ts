@@ -60,7 +60,7 @@ export class GeminiService {
     this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   }
 
-  async generateRecipes(ingredients: string): Promise<Recipe[]> {
+  async generateRecipes(ingredients: string, cuisine: string): Promise<Recipe[]> {
     const langCode = this.translationService.language();
     const languageMap = {
       fr: 'French',
@@ -70,10 +70,17 @@ export class GeminiService {
     };
     const targetLanguage = languageMap[langCode];
 
+    let prompt = `Generate 3 diverse and delicious recipes using the following ingredients: ${ingredients}.`;
+    if (cuisine && cuisine !== 'any') {
+      prompt = `Generate 3 diverse and delicious ${cuisine} recipes using the following ingredients: ${ingredients}.`;
+    }
+    prompt += ` The entire response, including recipe names, descriptions, ingredients, and instructions, must be in ${targetLanguage}.`;
+
+
     try {
       const response = await this.ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: `Generate 3 diverse and delicious recipes using the following ingredients: ${ingredients}. The entire response, including recipe names, descriptions, ingredients, and instructions, must be in ${targetLanguage}.`,
+        contents: prompt,
         config: {
           responseMimeType: "application/json",
           responseSchema: this.recipeSchema,

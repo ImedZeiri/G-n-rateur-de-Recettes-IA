@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, signal, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, effect, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
 
@@ -31,7 +31,9 @@ export class AppComponent {
   private readonly HISTORY_KEY = 'recipe_history';
   private readonly PINNED_KEY = 'recipe_pinned';
 
+  showSplash = signal<boolean>(true);
   ingredients = signal<string>('tomates, basilic, ail');
+  selectedCuisine = signal<string>('any');
   recipes = signal<Recipe[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -41,8 +43,25 @@ export class AppComponent {
   history = signal<Recipe[]>([]);
   pinnedRecipes = signal<Recipe[]>([]);
 
+  cuisines = computed(() => [
+    { key: 'any', label: this.t('cuisineAny') },
+    { key: 'Italian', label: this.t('cuisineItalian') },
+    { key: 'French', label: this.t('cuisineFrench') },
+    { key: 'Mexican', label: this.t('cuisineMexican') },
+    { key: 'Chinese', label: this.t('cuisineChinese') },
+    { key: 'Indian', label: this.t('cuisineIndian') },
+    { key: 'Japanese', label: this.t('cuisineJapanese') },
+    { key: 'Mediterranean', label: this.t('cuisineMediterranean') },
+  ]);
+
   constructor() {
     this.loadStateFromLocalStorage();
+
+    if (typeof window !== 'undefined') {
+      setTimeout(() => this.showSplash.set(false), 2500);
+    } else {
+      this.showSplash.set(false);
+    }
 
     effect(() => {
       const lang = this.translationService.language();
@@ -82,7 +101,7 @@ export class AppComponent {
     this.recipes.set([]);
 
     try {
-      const result = await this.geminiService.generateRecipes(this.ingredients());
+      const result = await this.geminiService.generateRecipes(this.ingredients(), this.selectedCuisine());
       if (result.length === 0) {
         this.error.set(this.t('noRecipesFoundError'));
       } else {

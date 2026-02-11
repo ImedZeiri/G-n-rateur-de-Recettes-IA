@@ -1,5 +1,14 @@
 
-<div class="min-h-screen text-gray-800 dark:text-gray-200">
+@if (showSplash()) {
+  <div class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700 text-white z-[9999]">
+    <div class="animate-pulse">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5,8.17a3.49,3.49,0,1,0-3.49-3.5A3.5,3.5,0,0,0,16.5,8.17Zm0-6A2.49,2.49,0,1,1,14,4.67,2.5,2.5,0,0,1,16.5,2.17Z"/><path d="M19,19.29a.75.75,0,0,0,1,0,8.49,8.49,0,0,0-15,0,.75.75,0,1,0,1,1,7,7,0,0,1,13,0A.75.75,0,0,0,19,19.29Z"/><path d="M16.25,11.42h-1.5a.75.75,0,0,0,0,1.5h1.5a.75.75,0,0,0,0-1.5Z"/><path d="M12,11.42a.75.75,0,0,0-.75.75v3.5a.75.75,0,0,0,1.5,0v-3.5A.75.75,0,0,0,12,11.42Z"/><path d="M9.25,11.42h-1.5a.75.75,0,0,0,0,1.5h1.5a.75.75,0,0,0,0-1.5Z"/></svg>
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight font-serif mt-6">{{ t('title') }}</h1>
+    <p class="text-lg text-indigo-200 mt-2 px-4 text-center">{{ t('heroSubtitle') }}</p>
+  </div>
+} @else {
+<div class="min-h-screen text-gray-800 dark:text-gray-200 animate-fade-in">
   
   <!-- Hero and Header Section -->
   <div class="relative bg-gradient-to-br from-indigo-600 to-purple-700 dark:from-indigo-900 dark:to-purple-900 text-white p-4 sm:p-6 lg:p-8 pb-16 sm:pb-20 rounded-b-3xl shadow-lg overflow-hidden">
@@ -20,22 +29,37 @@
     </header>
 
     <div class="relative max-w-2xl mx-auto text-center z-10">
-      <h2 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4 font-serif">{{ t('heroTitle') }}</h2>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 font-serif">{{ t('heroTitle') }}</h2>
       <p class="text-lg sm:text-xl text-indigo-200 mb-8">{{ t('heroSubtitle') }}</p>
 
       <!-- Search Form -->
       <div class="bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl shadow-md p-6">
-        <div class="mb-4 text-left">
-          <label for="ingredients" class="block text-sm font-medium text-white mb-2">{{ t('searchLabel') }}</label>
-          <input 
-            id="ingredients"
-            type="text" 
-            [ngModel]="ingredients()"
-            (ngModelChange)="ingredients.set($event)"
-            (keyup.enter)="findRecipes()"
-            [placeholder]="t('searchPlaceholder')"
-            class="w-full px-4 py-3 bg-white/20 dark:bg-black/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 placeholder-indigo-100 dark:placeholder-gray-300 text-white">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div class="text-left">
+            <label for="ingredients" class="block text-sm font-medium text-white mb-2">{{ t('searchLabel') }}</label>
+            <input 
+              id="ingredients"
+              type="text" 
+              [ngModel]="ingredients()"
+              (ngModelChange)="ingredients.set($event)"
+              (keyup.enter)="findRecipes()"
+              [placeholder]="t('searchPlaceholder')"
+              class="w-full px-4 py-3 bg-white/20 dark:bg-black/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 placeholder-indigo-100 dark:placeholder-gray-300 text-white">
+          </div>
+          <div class="text-left">
+            <label for="cuisine" class="block text-sm font-medium text-white mb-2">{{ t('cuisineLabel') }}</label>
+            <select
+              id="cuisine"
+              [ngModel]="selectedCuisine()"
+              (ngModelChange)="selectedCuisine.set($event)"
+              class="w-full px-4 py-3 bg-white/20 dark:bg-black/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white transition duration-200 text-white dark:text-white">
+              @for (cuisine of cuisines(); track cuisine.key) {
+                <option class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white" [value]="cuisine.key">{{ cuisine.label }}</option>
+              }
+            </select>
+          </div>
         </div>
+
         <p class="text-xs text-indigo-100 mb-4 text-left">{{ t('searchExample') }}</p>
         <button 
           (click)="findRecipes()" 
@@ -106,3 +130,4 @@
     </app-profile-panel>
   }
 </div>
+}

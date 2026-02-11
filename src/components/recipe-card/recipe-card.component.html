@@ -7,10 +7,10 @@
     <img [src]="r.imageUrl" [alt]="r.recipeName" class="absolute inset-0 w-full h-full object-cover -z-10">
     <div class="absolute inset-0 w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent -z-10"></div>
 
-    <div class="p-6 flex-grow flex flex-col justify-end text-white">
+    <div class="p-4 sm:p-6 flex-grow flex flex-col justify-end text-white">
       <!-- Title and Description -->
       <div class="flex-grow">
-        <h3 class="text-2xl font-bold font-serif mb-2 drop-shadow-md">{{ r.recipeName }}</h3>
+        <h3 class="text-xl sm:text-2xl font-bold font-serif mb-2 drop-shadow-md">{{ r.recipeName }}</h3>
         <p class="text-sm mb-4 flex-grow drop-shadow-sm text-gray-200">{{ r.description }}</p>
       </div>
 
@@ -20,15 +20,15 @@
         <button 
           (click)="onTogglePin()" 
           [attr.aria-label]="r.isPinned ? t('unpinRecipe') : t('pinRecipe')"
-          class="absolute -top-4 -right-2 z-10 p-2 rounded-full transition-all duration-300"
+          class="absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300"
           [class.bg-amber-400]="r.isPinned"
           [class.text-white]="r.isPinned"
-          [class.bg-white]="!r.isPinned"
-          [class.text-gray-700]="!r.isPinned"
-          [class.dark:bg-gray-700]="!r.isPinned"
-          [class.dark:text-amber-300]="!r.isPinned"
+          [class.hover:bg-amber-500]="r.isPinned"
+          [class.bg-black/20]="!r.isPinned"
+          [class.text-white]="!r.isPinned"
+          [class.hover:bg-black/40]="!r.isPinned"
           [class.hover:scale-110]="true">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M16,12V4a1,1,0,0,0-1-1H9A1,1,0,0,0,8,4v8l-2.29,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L10,13.41V20a1,1,0,0,0,2,0V13.41l2.88,2.88a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
           </svg>
         </button>
